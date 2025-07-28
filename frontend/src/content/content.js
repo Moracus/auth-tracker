@@ -23,10 +23,27 @@ document.addEventListener("click", (e) => {
     "login.microsoftonline.com": "Microsoft",
   };
 
-  const href = e.target.closest("a")?.href || "";
+  const el = e.target.closest("a, button, div, iframe");
+  if (!el) return;
+
+  // Check href or data-href or onclick script
+  const href =
+    el.href ||
+    el.getAttribute("data-href") ||
+    el.getAttribute("onclick") ||
+    el.getAttribute("src") ||
+    "";
+
+  // Also check text content as a fallback
+  const text = el.textContent?.toLowerCase() || "";
+
   for (const [pattern, provider] of Object.entries(oauthProviders)) {
-    if (href.includes(pattern)) {
-      fetch("http://localhost:5000/track-login", {
+    if (
+      href.includes(pattern) ||
+      text.includes(`sign in with ${provider.toLowerCase()}`) ||
+      text.includes(`continue with ${provider.toLowerCase()}`)
+    ) {
+      fetch(`${backendUrl}/track-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -35,6 +52,38 @@ document.addEventListener("click", (e) => {
           credential: provider,
         }),
       });
+      break; // stop after first match
     }
   }
 });
+
+function checkForOAuthIframes() {
+  const iframes = document.getElementsByTagName("iframe");
+
+  for (const iframe of iframes) {
+    const src = iframe.src || "";
+
+    const oauthPatterns = {
+      "accounts.google.com": "Google",
+      "facebook.com/dialog": "Facebook",
+      "github.com/login/oauth": "GitHub",
+      "login.microsoftonline.com": "Microsoft",
+    };
+
+    for (const [pattern, provider] of Object.entries(oauthPatterns)) {
+      if (src.includes(pattern)) {
+        fetch(`${backendUrl}/track-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            domain: window.location.hostname,
+            loginMethod: "oauth",
+            credential: provider,
+          }),
+        });
+        break;
+      }
+    }
+  }
+}
+setInterval(checkForOAuthIframes, 2000);
