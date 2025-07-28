@@ -16,6 +16,7 @@ document.addEventListener("submit", (e) => {
 });
 
 document.addEventListener("click", (e) => {
+  checkForOAuthIframes();
   const oauthProviders = {
     "accounts.google.com": "Google",
     "facebook.com/dialog": "Facebook",
@@ -86,4 +87,3 @@ function checkForOAuthIframes() {
     }
   }
 }
-setInterval(checkForOAuthIframes, 2000);
