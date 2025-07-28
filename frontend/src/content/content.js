@@ -27,15 +27,12 @@ document.addEventListener("click", (e) => {
   const el = e.target.closest("a, button, div, iframe");
   if (!el) return;
 
-  // Check href or data-href or onclick script
   const href =
     el.href ||
     el.getAttribute("data-href") ||
     el.getAttribute("onclick") ||
     el.getAttribute("src") ||
     "";
-
-  // Also check text content as a fallback
   const text = el.textContent?.toLowerCase() || "";
 
   for (const [pattern, provider] of Object.entries(oauthProviders)) {
