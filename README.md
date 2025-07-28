@@ -2,7 +2,7 @@
 <img width="1875" height="981" alt="image" src="https://github.com/user-attachments/assets/5d69b081-132f-468f-8fd9-7f7f9653b3e5" />
 
 
-A Chrome Extension that tracks login activity across websites — including both **regular email/password logins** and **OAuth logins** (Google, Facebook, GitHub, Microsoft, etc.).
+A Chrome Extension that tracks login activity across websites  including both **regular email/password logins** and **OAuth logins** (Google, Facebook, GitHub, Microsoft, etc.).
 
 Built with **MERN (MongoDB, Express, React, Node.js)** + **Vite + Tailwind CSS**.
 
